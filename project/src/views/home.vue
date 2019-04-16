@@ -11,8 +11,7 @@ export default {
         }
     },
     created(){
-        console.log(this.$store.state);
-        console.log(this.userInfo)
+
     },
     mounted(){
         this.$store.dispatch('user/testUserToken').then(res=>{

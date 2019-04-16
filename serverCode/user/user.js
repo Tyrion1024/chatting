@@ -156,11 +156,7 @@ app.get('/testUserName',function(req,res,next){
 app.get('/testUserToken',function(req,res,next){
     try{
         token.testUserToken(req.cookies).then(result=>{
-            if(result.code === 0){
-                res.send({code:o,msg:'验证通过'})
-            }else{
-                res.send({code:1,msg:'验证未通过'})
-            }
+            res.send(result)
         }).catch(err=>{
             res.send({code:1,msg:'验证未通过'})
         })

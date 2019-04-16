@@ -10,15 +10,20 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    // {
+    //   path:'/',
+    //   name:'home',
+    //   component:Home
+    // },
+    // {
+    //   path: '/chatRoom',
+    //   name: 'chatRoom',
+    //   component: chatRoom
+    // },
     {
       path:'/',
-      name:'home',
-      component:Home
-    },
-    {
-      path: '/chatRoom',
-      name: 'chatRoom',
-      component: chatRoom
+      name:'chatRoom',
+      component:chatRoom
     },
     {
       path:'/login',
@@ -29,10 +34,6 @@ export default new Router({
       path:'/register',
       name:'register',
       component:register
-    },
-    {
-      path:'/',
-      redirect:'/home'
     },
     {
       path:'/unLogin',

@@ -11,6 +11,9 @@ function testUserToken(cookies){
     return new Promise((resolve,reject)=>{
         try{
             let userToken = cookies.userToken;
+            if(!userToken){
+                resolve({code:1,msg:'验证未通过'})                
+            }
             db.request({
                 url:'/find',
                 method:'GET',

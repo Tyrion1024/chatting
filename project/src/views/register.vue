@@ -7,7 +7,7 @@
             password：<input type="password" v-model="password">
         </div>
         <div class="btn_group">
-            <button :disabled="name&&password" class="btn_register">注册</button>
+            <button :disabled="!name||!password" @click="register" class="btn_register">注册</button>
             <router-link to='/login'>
                 <button class="btn_register">去登录</button>
             </router-link>
@@ -37,7 +37,15 @@ export default {
         })
     },
     methods:{
-
+        register(){
+            this.$store.dispatch('user/register',{password:this.password,name:this.name}).then(res=>{
+                if(res.code === 0){
+                    this.$router.push('/');                    
+                }else{
+                    alert(res.msg)
+                }
+            })
+        }
     },
     computed:{
         
