@@ -20,6 +20,13 @@ export default {
         this.$store.dispatch('user/testUserToken').then(res=>{
             if(res.code!==0){
                 this.$router.push('/unLogin');
+            }else{
+                // this.$store.dispatch('room/getMyRoom').then(res=>{
+                //     console.log(res);
+                //     return this.$store.dispatch('room/joinRoom','93155554242599610');
+                // }).then(res=>{
+                //     console.log(res);
+                // })
             }
         })
     },

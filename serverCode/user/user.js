@@ -96,6 +96,7 @@ app.post('/register',function(req,res,next){
                   resolve({code:1,msg:'用户名已被占用'})  
                 })
             }else{
+                userInfo.myRoom = [];
                 return db.request({
                     url:'/insert',
                     method:'POST',
