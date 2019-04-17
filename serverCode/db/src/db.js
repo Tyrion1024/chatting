@@ -123,7 +123,7 @@ function find(req) {
             db.aggregate(body).toArray(function(err,result){
                 if(err){
                     console.log(err)
-                    resolve({code:1,errmsg:'aggregate error'})            
+                    resolve({code:1,errmsg:'aggregate error',err,err})            
                 }else{
                     result.forEach(el=>{
                         delete el.password;
@@ -133,7 +133,7 @@ function find(req) {
             })    
         } catch (error) {
             console.log(error);
-            resolve({code:1,errmsg:'aggregate error'})            
+            resolve({code:1,errmsg:'aggregate error',error})            
         }
     })
 }

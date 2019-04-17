@@ -34,7 +34,7 @@ export default {
             if(res.code==0){
                 this.$router.push('/');
             }
-        })
+        });
     },
     methods:{
         login(){

@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 module.exports = {
     devServer: {
       proxy: {

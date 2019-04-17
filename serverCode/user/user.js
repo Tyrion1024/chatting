@@ -47,6 +47,7 @@ app.post('/login',function(req,res,next){
     let userInfo = {username:'',password:''};
     try{
         userInfo = req.body;
+        console.log(userInfo);
         db.request({
             url:'/find',
             method:'GET',
@@ -56,11 +57,12 @@ app.post('/login',function(req,res,next){
                 where:userInfo
             }
         }).then(result=>{
+            console.log('result',result.data)
             if(result.data.length>0){
                 res.cookie('userToken',result.data[0].objectId,{maxAge:1000*3600*24,httpOnly:true})
                 res.send({code:0,data:result.data[0],msg:'登陆成功'})
             }else{
-                res.send({code:0,msg:'登陆失败，账号或密码输入错误'})
+                res.send({code:1,msg:'登陆失败，账号或密码输入错误'})
             }
         }).catch(err=>{
             console.log(err)
@@ -142,9 +144,9 @@ app.get('/testUserName',function(req,res,next){
             }
         }).then(result=>{
             if(result.data.length>0){
-                res.send({code:0,msg:'用户名已被占用'})
+                res.send({code:1,msg:'用户名已被占用'})
             }else{
-                res.send({code:1,msg:'用户名未被占用'})
+                res.send({code:0,msg:'用户名未被占用'})
             }
         })
     }catch(err){
