@@ -36,7 +36,7 @@ const store = {
                         }
                     },
                     include:[{
-                        from:"msgs",
+                        from:"msg",
                         as:'msgs',
                         localField:"objectId",
                         foreignField:"room"
@@ -51,7 +51,7 @@ const store = {
                 }
                 util.httpAjax('/data/find','GET',params,{}).then(res=>{
                     let myRoom = context.state.myRoom;
-                    res.results.forEach(element => {
+                    res.forEach(element => {
                         let i = myRoom.findIndex(el=>{return el.objectId === element.objectId});
                         if(i === -1){
                             myRoom.push(element)
@@ -119,6 +119,35 @@ const store = {
         },
         quitRoom(context,roomId){
 
+        },
+
+        getMsgByRoomId(context,roomId){
+            let params = {
+                collection:'test',
+                docName:'msg',
+                where:{
+                    refRoom:roomId
+                },
+                include:[{
+                    from:'user',
+                    as:'createUser',
+                    localField:'createUser',
+                    foreignField:'objectId'
+                }]
+            }
+            return new Promise((resolve,reject)=>{
+                util.httpAjax('/data/find','GET',params,{}).then(res=>{
+                    let myRoom = context.state.myRoom;
+                    let tempRoomIndex = myRoom.findIndex(item=>{
+                        return item.objectId === roomId
+                    })
+                    myRoom[tempRoomIndex].msgs = res;
+                    context.commit('setMyRoom',myRoom);
+                    resolve(res);
+                }).catch(err=>{
+                    resolve({code:1,msg:'get data failed',err:err})
+                })
+            })
         }
     }
 }

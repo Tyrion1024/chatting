@@ -47,16 +47,18 @@ function find(req) {
         try {
             const collection = dataBase.db(req.query.collection);
             const db = collection.collection(req.query.docName);
-            let body = [{
-                "$sort":{
-                    "updatedAt":-1
+            let includeObj;
+            let body = [
+                {
+                    "$sort":{
+                        "updatedAt":-1
+                    }
+                },{
+                    "$project":{
+                        "_id":0
+                    },
                 }
-            },{
-                "$project":{
-                    "_id":0
-                },
-            }
-        ];
+            ];
             if(req.query.keys){
                 let project = {};
                 let tmpArr = req.query.keys.split('|');
@@ -76,12 +78,17 @@ function find(req) {
     
             if(req.query.include){
                 req.query.include.forEach(el=>{
+                    let include = JSON.parse(el);
+                    // console.log(include)
+                    if(include.from === 'user'){
+                        includeObj = include;
+                    }
                     body.push({
                         "$lookup":{
-                            from:el.from,
-                            as:el.as,
-                            localField:el.localProp,
-                            foreignField:el.foreignProp
+                            from:include.from,
+                            as:include.as,
+                            localField:include.localField,
+                            foreignField:include.foreignField
                         }
                     })
                 })
@@ -128,6 +135,13 @@ function find(req) {
                     result.forEach(el=>{
                         delete el.password;
                     })
+                    if(includeObj){
+                        result.forEach(element=>{
+                            element[includeObj.as].forEach(el=>{
+                                delete el.password
+                            })
+                        })
+                    }
                     resolve(result)
                 }
             })    

@@ -26,7 +26,7 @@ function testUserToken(cookies){
                 }
             }).then(result=>{
                 if(result.data.length>0){
-                    resolve({code:0,msg:'验证通过'})
+                    resolve({code:0,msg:'验证通过',data:result.data[0]})
                 }else{
                     resolve({code:1,msg:'验证未通过'})
                 }

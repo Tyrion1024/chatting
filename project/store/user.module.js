@@ -52,6 +52,8 @@ const store = {
                 util.httpAjax('/user/testUserToken','GET',{}).then(res=>{
                     if(res.code){
                         context.commit('setUserInfo',{})
+                    }else{
+                        context.commit('setUserInfo',res.data);
                     }
                     resolve(res);
                 }).catch(err=>{
