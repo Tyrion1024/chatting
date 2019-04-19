@@ -1,14 +1,13 @@
 import axios from 'axios';
 // https://www.loveyyt.cn/
 let axiosObj = axios.create({
-    baseURL:'http://localhost:8080/api',
+    baseURL:'http://localhost:5000/api',
     timeout:10000
 })
 
 axiosObj.defaults.withCredentials=true
 
 axiosObj.interceptors.request.use(function (request) {
-    // 在发送请求之前做些什么
     // console.log(request)
     return request;
 }, function (error) {

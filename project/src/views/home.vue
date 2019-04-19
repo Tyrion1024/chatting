@@ -24,7 +24,6 @@ export default {
         ...mapState('user',{
             userInfo:state=>state.userInfo
         })
-        // ...mapState(['userInfo'])
     }
 }
 </script>
