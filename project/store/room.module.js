@@ -1,5 +1,6 @@
 const util = require('../src/common/util.js')
-
+import io from 'socket.io-client';
+let baseUrl = 'http://192.168.0.103:3000';
 
 // room = {
 //     objectId:'',
@@ -12,11 +13,15 @@ const util = require('../src/common/util.js')
 const store = {
     namespaced:true,
     state: {
-        myRoom:[]
+        myRoom:[],
+        currentIO:{}
     },
     mutations: {
         setMyRoom(state,arr){
             state.myRoom = arr
+        },
+        setCurrentIO(state,currentIO){
+            state.currentIO = currentIO
         }
     },
     actions: {
@@ -147,6 +152,31 @@ const store = {
                 }).catch(err=>{
                     resolve({code:1,msg:'get data failed',err:err})
                 })
+            })
+        },
+        getConnection(context,val){
+            return new Promise((resolve,reject)=>{
+                let socket = io.connect(baseUrl);
+                context.commit('setCurrentIO',socket)
+
+                socket.on('connect',()=>{
+                    socket.emit('logIn',{room:val,name:context.rootState.user.userInfo.name})
+                })
+
+                socket.on('disconnect', (res)=>{
+                    socket.emit('logOut',{room:val,name:context.rootState.user.userInfo.name})
+                });
+
+                socket.on('sc',data=>{
+                    console.log('sc',data);
+                    let myRoom = context.state.myRoom;
+                    let i = myRoom.findIndex(item=>{
+                        return val === item.objectId
+                    });
+                    myRoom[i].msgs.push(data.msg);
+                    context.commit('setMyRoom',myRoom);
+                });
+                resolve(socket);
             })
         }
     }

@@ -60,6 +60,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import { Promise, reject } from 'q';
 const util = require('../common/util.js')
 export default {
     data(){
@@ -72,21 +73,28 @@ export default {
             if(res.code!==0){
                 this.$router.push('/unLogin');
             }else{
-                this.$store.dispatch('room/getMyRoom').then(res=>{
-                    // console.log(res);
-                    if(res.length === 0){
-                        this.$store.dispatch('room/joinRoom','93155554242599610').then(res=>{
-                            this.currentRoomIndex = 0;
-                        })
-                    }else{
-                        this.currentRoomIndex = 0;
-                    }
+                this.getIntoRoom().then(res=>{
+                    this.$store.dispatch('room/getConnection',res);
                 })
             }
         })
     },
     methods:{
-
+        getIntoRoom(){
+            return new Promise((resolve,reject)=>{
+                this.$store.dispatch('room/getMyRoom').then(res=>{
+                    if(res.length === 0){
+                        this.$store.dispatch('room/joinRoom','93155554242599610').then(res=>{
+                            this.currentRoomIndex = 0;
+                            resolve('93155554242599610')
+                        })
+                    }else{
+                        this.currentRoomIndex = 0;
+                        resolve('93155554242599610')
+                    }
+                })
+            })
+        }
     },
     computed:{
         ...mapState('user',{

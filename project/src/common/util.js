@@ -38,6 +38,19 @@ function httpAjax(url,method,params,data){
 
 
 
+
+
+
+
+let axiosWs = axios.create({
+    baseURL:'http://localhost:8000',
+    timeout:10000000000
+})
+
+
+
+
 export {
-    httpAjax
+    httpAjax,
+    axiosWs
 }

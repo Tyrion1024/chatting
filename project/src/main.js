@@ -5,7 +5,6 @@ import store from '../store/store'
 import 'amfe-flexible'
 
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,
