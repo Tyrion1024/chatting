@@ -1,7 +1,11 @@
 import axios from 'axios';
-// https://www.loveyyt.cn/
+
+// let axiosObj = axios.create({
+//     baseURL:'http://localhost:5000/api',
+//     timeout:10000
+// })
 let axiosObj = axios.create({
-    baseURL:'http://localhost:5000/api',
+    baseURL:'https://www.loveyyt.cn',
     timeout:10000
 })
 
@@ -42,15 +46,6 @@ function httpAjax(url,method,params,data){
 
 
 
-let axiosWs = axios.create({
-    baseURL:'http://localhost:8000',
-    timeout:10000000000
-})
-
-
-
-
 export {
-    httpAjax,
-    axiosWs
+    httpAjax
 }

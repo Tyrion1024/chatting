@@ -1,6 +1,9 @@
 const util = require('../src/common/util.js')
 import io from 'socket.io-client';
-let baseUrl = 'http://192.168.0.103:3000';
+// let baseUrl = 'http://localhost:3020';
+// let baseUrl = 'ws://140.143.234.130:3020';
+let baseUrl = 'https://www.loveyyt.cn';
+
 
 // room = {
 //     objectId:'',
@@ -40,19 +43,20 @@ const store = {
                             "$in":roomArr
                         }
                     },
-                    include:[{
-                        from:"msg",
-                        as:'msgs',
-                        localField:"objectId",
-                        foreignField:"room"
-                    },
-                    {
-                        from:"user",
-                        as:"createUser",
-                        localField:"createUser",
-                        foreignField:"objectId"
-                    }
-                ]
+                    include:[
+                        {
+                            from:"msgs",
+                            as:'msgs',
+                            localField:"objectId",
+                            foreignField:"refRoom"
+                        },
+                        {
+                            from:"user",
+                            as:"createUser",
+                            localField:"createUser",
+                            foreignField:"objectId"
+                        }
+                    ]
                 }
                 util.httpAjax('/data/find','GET',params,{}).then(res=>{
                     let myRoom = context.state.myRoom;
@@ -129,10 +133,11 @@ const store = {
         getMsgByRoomId(context,roomId){
             let params = {
                 collection:'test',
-                docName:'msg',
+                docName:'msgs',
                 where:{
                     refRoom:roomId
                 },
+                sort:'-createAt',
                 include:[{
                     from:'user',
                     as:'createUser',
@@ -142,6 +147,10 @@ const store = {
             }
             return new Promise((resolve,reject)=>{
                 util.httpAjax('/data/find','GET',params,{}).then(res=>{
+                    console.log(res)
+                    res.forEach(msg=>{
+                        msg.createUser = msg.createUser[0]
+                    });
                     let myRoom = context.state.myRoom;
                     let tempRoomIndex = myRoom.findIndex(item=>{
                         return item.objectId === roomId
@@ -149,6 +158,7 @@ const store = {
                     myRoom[tempRoomIndex].msgs = res;
                     context.commit('setMyRoom',myRoom);
                     resolve(res);
+                    // console.log(res)
                 }).catch(err=>{
                     resolve({code:1,msg:'get data failed',err:err})
                 })
@@ -156,7 +166,9 @@ const store = {
         },
         getConnection(context,val){
             return new Promise((resolve,reject)=>{
-                let socket = io.connect(baseUrl);
+                let socket = io.connect(baseUrl,{
+                    path:'/socket/socket.io'
+                });
                 context.commit('setCurrentIO',socket)
 
                 socket.on('connect',()=>{
@@ -173,11 +185,28 @@ const store = {
                     let i = myRoom.findIndex(item=>{
                         return val === item.objectId
                     });
-                    myRoom[i].msgs.push(data.msg);
+                    myRoom[i].msgs.push(data);
                     context.commit('setMyRoom',myRoom);
                 });
                 resolve(socket);
             })
+        },
+
+        // msgItem:{
+        //     objectId:'',     
+        //     createUser:'',
+        //     type:'',       需要传！
+        //     refRoom:'',    需要传！
+        //     content:'',    需要传！
+        //     status:1,      
+        //     createdAt:'',
+        //     updateAt:''
+        // },
+        sendMsg(context,msgItem){
+            let socket = context.state.currentIO,rootState = context.rootState;
+            msgItem.createUser = rootState.user.userInfo.objectId;
+            msgItem.status = 1;
+            socket.emit('cs',{name:rootState.user.userInfo.name,msg:msgItem});
         }
     }
 }
