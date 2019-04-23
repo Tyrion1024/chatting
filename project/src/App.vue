@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import io from 'socket.io-client';
 export default {
   data(){
     return{
@@ -14,7 +13,7 @@ export default {
     }
   },
   created(){
-    this.$confirm('确认关闭？')
+
   }
 }
 </script>

@@ -89,7 +89,6 @@ const store = {
                         context.commit('setMyRoom',myRoom);
                         resolve(myRoom)
                     }else{
-                        alert(res)
                         resolve(res)
                     }
                 }).catch(err=>{
