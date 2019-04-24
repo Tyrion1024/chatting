@@ -75,12 +75,12 @@ io.on('connection',socket=>{
 
   socket.on('logIn',data=>{
     socket.join(data.room);
-    io.in(data.room).emit('sc',{type:'system',content:data.name+'已加入房间'});
+    io.in(data.room).emit('sc',{refRoom:data.room,type:'system',content:data.name+'已加入房间'});
   });
 
   socket.on('logOut',data=>{
     socket.leave(data.room);
-    io.in(data.room).emit('sc',{type:'system',content:data.name+'已退出房间'});
+    io.in(data.room).emit('sc',{refRoom:data.room,type:'system',content:data.name+'已退出房间'});
   });
 
   socket.on('cs',data=>{
