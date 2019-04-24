@@ -21,11 +21,11 @@ const store = {
     },
     mutations: {
         setMyRoom(state,arr){
-            state.myRoom = arr
+            state.myRoom = arr.splice(0);
         },
         setCurrentIO(state,currentIO){
             state.currentIO = currentIO
-        }
+        },
     },
     actions: {
         getMyRoom(context,roomArr){
@@ -69,7 +69,7 @@ const store = {
                         }
                     });
                     context.commit('setMyRoom',myRoom);
-                    resolve(myRoom)
+                    resolve(res)
                 }).catch(err=>{
                     console.log(err);
                     resolve({code:1,msg:'请求失败'})
@@ -182,7 +182,7 @@ const store = {
                     console.log('sc',data);
                     let myRoom = context.state.myRoom;
                     let i = myRoom.findIndex(item=>{
-                        return val === item.objectId
+                        return data.refRoom === item.objectId
                     });
                     myRoom[i].msgs.push(data);
                     context.commit('setMyRoom',myRoom);
@@ -202,10 +202,13 @@ const store = {
         //     updateAt:''
         // },
         sendMsg(context,msgItem){
-            let socket = context.state.currentIO,rootState = context.rootState;
-            msgItem.createUser = rootState.user.userInfo.objectId;
-            msgItem.status = 1;
-            socket.emit('cs',{name:rootState.user.userInfo.name,msg:msgItem});
+            return new Promise((resolve,reject)=>{
+                let socket = context.state.currentIO,rootState = context.rootState;
+                msgItem.createUser = rootState.user.userInfo.objectId;
+                msgItem.status = 1;
+                socket.emit('cs',{name:rootState.user.userInfo.name,msg:msgItem});
+                resolve();
+            })
         }
     }
 }

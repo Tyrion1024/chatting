@@ -14,30 +14,37 @@
             <el-input placeholder="please type password" v-model="password" :minlength="6" :maxlength="15" show-password></el-input>
         </div>
         <div class="btn_group">
-            <el-button :disabled="name.length>10||name.length == 0||password.length<6||password.length>15" @click="login" class="btn_submit" type="primary">登录</el-button>
-            <!-- <button :disabled="!name||!password" @click="login" class="btn_submit">登录</button> -->
-            <router-link to='/register'>
-                <!-- <button class="btn_register">去注册</button> -->
-                <el-button class="btn_register">去注册</el-button>
-            </router-link>
+            <el-button :disabled="name.length>10||name.length == 0||password.length<6||password.length>15" @click="login" type="primary" class="btn_submit">登录</el-button>
+            <el-button class="btn_register" @click='goRegister'>去注册</el-button>
         </div>
     </div>
 </template>
 
 <style scoped>
     .container{
-        width:200px;
-        margin:100px auto;
+        width:40%;
+        margin:300px auto 0;
     }
+    @media screen and (max-width: 750px) {
+        .container{
+            width:70%;
+            margin:500px auto 0;
+        }
+    }
+
     .container div{
-        margin-top:5px;
+        margin-top:10px;
     }
-    .btn_group{
+    .container .btn_group{
         display: flex;
         justify-content: center;
+        margin-top:60px;
     }
     .el-button{
         margin-right:15px;
+    }
+    .btn_register{
+        height:100%;
     }
 </style>
 
@@ -52,6 +59,7 @@ export default {
         }
     },
     created(){
+        document.title = '登录'
         this.$store.dispatch('user/testUserToken').then(res=>{
             if(res.code==0){
                 this.$router.push('/');
@@ -89,6 +97,9 @@ export default {
                     });
                 }
             })
+        },
+        goRegister(){
+            this.$router.push('/register')
         }
     },
     computed:{

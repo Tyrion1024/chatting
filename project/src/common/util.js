@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-let axiosObj = axios.create({
-    baseURL:'http://localhost:5000/api',
-    timeout:10000
-})
 // let axiosObj = axios.create({
-//     baseURL:'https://www.loveyyt.cn',
+//     baseURL:'http://localhost:5000/api',
 //     timeout:10000
 // })
+let axiosObj = axios.create({
+    baseURL:'https://www.loveyyt.cn',
+    timeout:10000
+})
 
 axiosObj.defaults.withCredentials=true
 

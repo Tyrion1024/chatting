@@ -13,24 +13,30 @@
         </div>
         <div class="btn_group">
             <el-button :disabled="name.length>10||name.length == 0||password.length<6||password.length>15" @click="register" class="btn_register" type="primary">注册</el-button>
-            <router-link to='/login'>
-                <el-button class="btn_register">去登录</el-button>
-            </router-link>
+            <el-button class="btn_register" @click="goLogin">去登录</el-button>
         </div>
     </div>
 </template>
 
 <style scoped>
     .container{
-        width:200px;
-        margin:100px auto;
+        width:40%;
+        margin:300px auto 0;
     }
+    @media screen and (max-width: 750px) {
+        .container{
+            width:70%;
+            margin:500px auto 0;
+        }
+    }
+
     .container div{
-        margin-top:5px;
+        margin-top:10px;
     }
-    .btn_group{
+    .container .btn_group{
         display: flex;
         justify-content: center;
+        margin-top:60px;
     }
     .el-button{
         margin-right:15px;
@@ -48,6 +54,7 @@ export default {
         }
     },
     created(){
+        document.title = '注册'
         this.$store.dispatch('user/testUserToken').then(res=>{
             if(res.code==0){
                 this.$router.push('/');
@@ -85,6 +92,9 @@ export default {
                     });
                 }
             })
+        },
+        goLogin(){
+            this.$router.push('/login');
         }
     },
     computed:{
